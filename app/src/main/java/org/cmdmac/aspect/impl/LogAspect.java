@@ -1,12 +1,14 @@
 package org.cmdmac.aspect.impl;
 
-import android.util.Log;
+import android.text.TextUtils;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.cmdmac.aspect.annotation.Log;
+import org.cmdmac.aspect.annotation.Trace;
 
 import java.util.Arrays;
 
@@ -16,20 +18,33 @@ import java.util.Arrays;
 @Aspect
 public class LogAspect {
 
-    @Around("pointcut()")
-    public Object doLogMethod(final ProceedingJoinPoint joinPoint) throws Throwable {
-        return logMethod(joinPoint);
-    }
-
-    @Pointcut("@within(org.cmdmac.aspect.annotation.Log)||@annotation(org.cmdmac.aspect.annotation.Log)")
+    @Pointcut("execution(@org.cmdmac.aspect.annotation.Log * *(..))")
     public void pointcut() {
+
     }
 
-    private Object logMethod(final ProceedingJoinPoint joinPoint) throws Throwable {
-        Log.w(LogAspect.class.getSimpleName(), joinPoint.getSignature().toShortString() + " Args : " + (joinPoint.getArgs() != null ? Arrays.deepToString(joinPoint.getArgs()) : ""));
-        Object result = joinPoint.proceed();
-        String type = ((MethodSignature) joinPoint.getSignature()).getReturnType().toString();
-        Log.w(LogAspect.class.getSimpleName(), joinPoint.getSignature().toShortString() + " Result : " + ("void".equalsIgnoreCase(type)?"void":result));
-        return result;
+    @Around("pointcut() && @annotation(log)")
+    public Object around(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
+        StringBuilder sb = new StringBuilder();
+        String msg = log.msg();
+        if (TextUtils.isEmpty(msg)) {
+            msg = joinPoint.getSignature().toShortString();
+            sb.append(msg);
+        }
+        if (log.showParams()) {
+            Object[] args = joinPoint.getArgs();
+            if (args != null) {
+                for (Object arg : args) {
+                    sb.append(arg.getClass().getSimpleName()).append("=");
+                    sb.append(arg.toString())
+                            .append(',');
+                }
+            }
+        }
+        android.util.Log.w(LogAspect.class.getSimpleName(), sb.toString());
+        return joinPoint.proceed();
     }
+
+
+//    }
 }
