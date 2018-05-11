@@ -1,4 +1,4 @@
-package org.cmdmac.aspect.impl;
+package org.cmdmac.aop.impl;
 
 import android.util.Log;
 
@@ -6,21 +6,18 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.cmdmac.aspect.annotation.Async;
-import org.cmdmac.aspect.annotation.Trace;
-import org.cmdmac.aspect.utils.AOPConfig;
-
-import java.time.Clock;
-import java.util.Timer;
+import org.cmdmac.aop.annotation.Trace;
 
 @Aspect
 public class TraceAspect {
-    @Pointcut("execution(@org.cmdmac.aspect.annotation.Trace * *(..))")
+//    @Pointcut("execution(@org.cmdmac.aop.annotation.Trace * *(..))")
+    @Pointcut("@annotation(org.cmdmac.aop.annotation.Trace)")
     public void pointcut() {
 
     }
 
-    @Around("pointcut() && @annotation(trace)")
+//    @Around("pointcut() && @annotation(trace)")
+    @Around("@annotation(org.cmdmac.aop.annotation.Trace)")
     public Object around(ProceedingJoinPoint joinPoint, Trace trace) throws Throwable {
 //        System.out.println("@Around");
 

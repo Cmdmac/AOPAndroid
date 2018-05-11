@@ -3,14 +3,19 @@
 buildscript {
     
     repositories {
-        google()
+//        google()
         jcenter()
+        maven {
+            url uri('./repo')
+        }
+//        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:2.1.3'
+        classpath 'org.cmdmac.aop.plugin:aopplugin:1.0.0'
 
-        classpath 'org.aspectj:aspectjtools:1.8.9'
-        classpath 'org.aspectj:aspectjweaver:1.8.9'
+        classpath 'org.aspectj:aspectjtools:1.8.13'
+        classpath 'org.aspectj:aspectjweaver:1.8.13'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -19,7 +24,7 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
+//        google()
         jcenter()
     }
 }

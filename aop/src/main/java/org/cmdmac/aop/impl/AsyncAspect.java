@@ -1,6 +1,4 @@
-package org.cmdmac.aspect.impl;
-
-import android.util.Log;
+package org.cmdmac.aop.impl;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,11 +9,11 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.cmdmac.aspect.utils.AOPConfig;
+import org.cmdmac.aop.utils.AOPConfig;
 
 @Aspect
 public class AsyncAspect {
-    @Pointcut("@within(org.cmdmac.aspect.annotation.Async)||@annotation(org.cmdmac.aspect.annotation.Async)")
+    @Pointcut("@within(org.cmdmac.aop.annotation.Async)||@annotation(org.cmdmac.aop.annotation.Async)")
     public void pointcut() {
 
     }

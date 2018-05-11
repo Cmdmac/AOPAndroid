@@ -1,4 +1,4 @@
-package org.cmdmac.aspect.impl;
+package org.cmdmac.aop.impl;
 
 import android.text.TextUtils;
 
@@ -6,11 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.cmdmac.aspect.annotation.Log;
-import org.cmdmac.aspect.annotation.Trace;
-
-import java.util.Arrays;
+import org.cmdmac.aop.annotation.Log;
 
 /**
  * Created by Tony Shen on 16/3/22.
@@ -18,7 +14,7 @@ import java.util.Arrays;
 @Aspect
 public class LogAspect {
 
-    @Pointcut("execution(@org.cmdmac.aspect.annotation.Log * *(..))")
+    @Pointcut("execution(@org.cmdmac.aop.annotation.Log * *(..))")
     public void pointcut() {
 
     }

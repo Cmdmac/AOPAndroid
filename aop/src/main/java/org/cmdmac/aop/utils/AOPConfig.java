@@ -1,4 +1,4 @@
-package org.cmdmac.aspect.utils;
+package org.cmdmac.aop.utils;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 

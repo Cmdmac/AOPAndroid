@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.limpoxe.android.aspectj'
 
 android {
     compileSdkVersion 27
@@ -19,18 +20,25 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+//    implementation project(':aop')
+//    compile(name:'aop-release', ext:'aar')
+
+    implementation 'org.aspectj:aspectjrt:1.8.9'
+
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
-    implementation 'org.aspectj:aspectjrt:1.8.9'
+//    annotationProcessor 'com.safframework.injectview:saf-injectview-compiler:1.0.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
+System.out.println("编译到这里了");
 
+/*
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
@@ -54,6 +62,7 @@ variants.all { variant ->
                          "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
         log.debug "ajc args: " + Arrays.toString(args)
 
+        System.out.println("编译到这里了1" + Arrays.toString(args));
         MessageHandler handler = new MessageHandler(true);
         new Main().run(args, handler);
         for (IMessage message : handler.getMessages(null, true)) {
@@ -61,18 +70,25 @@ variants.all { variant ->
                 case IMessage.ABORT:
                 case IMessage.ERROR:
                 case IMessage.FAIL:
+                    System.out.println("错误");
+
                     log.error message.message, message.thrown
                     break;
                 case IMessage.WARNING:
+                    System.out.println("错误");
                     log.warn message.message, message.thrown
                     break;
+                    System.out.println("WARNING");
                 case IMessage.INFO:
+                    System.out.println("INFO");
                     log.info message.message, message.thrown
                     break;
                 case IMessage.DEBUG:
+                    System.out.println("DEBUG");
                     log.debug message.message, message.thrown
                     break;
             }
         }
     }
 }
+*/
