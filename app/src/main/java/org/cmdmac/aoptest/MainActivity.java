@@ -8,34 +8,35 @@ import android.widget.Toast;
 //import org.aspectj.lang.ProceedingJoinPoint;
 //import org.cmdmac.aop.annotation.Async;
 //import org.cmdmac.aop.annotation.Log;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.cmdmac.aop.annotation.Log;
 import org.cmdmac.aop.annotation.Trace;
+import org.cmdmac.aop.utils.AOPConfig;
 //import org.cmdmac.aop.utils.AOPConfig;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
-    @Trace
-    @Log
+    @Trace(pkg = "test")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//       AOPConfig.setASyncHandler(new AOPConfig.IASyncHandler() {
-//            @Override
-//            public void run(final ProceedingJoinPoint joinPoint) {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            joinPoint.proceed();
-//                        } catch (Throwable throwable) {
-//                            throwable.printStackTrace();
-//                        }
-//                    }
-//                }).start();
-//
-//            }
-//        });
+       AOPConfig.setASyncHandler(new AOPConfig.IASyncHandler() {
+            @Override
+            public void run(final ProceedingJoinPoint joinPoint) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            joinPoint.proceed();
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+                }).start();
+
+            }
+        });
     }
 
 //    @Async(value="1111111111")
