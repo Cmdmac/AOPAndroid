@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        minSdkVersion 22
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+}
+
+task jarAnnotationLib(type: Jar, dependsOn: ['compileReleaseSources']) {
+    archiveName = 'annotation.jar'
+    from('build/intermediates/classes/release')
+//    destinationDir = file('build/libs')
+//    into('build/libs')
+    exclude('org/cmdmac/aop/annotaion/BuildConfig.class')
+    exclude('org/cmdmac/aop/annotaion/BuildConfig\$*.class')
+    exclude('**/R.class')
+    exclude('**/R\$*.class')
+    include('org/cmdmac/aop/annotation/')
+}

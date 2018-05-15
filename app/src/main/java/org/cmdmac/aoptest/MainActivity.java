@@ -9,11 +9,13 @@ import android.widget.Toast;
 //import org.cmdmac.aop.annotation.Async;
 //import org.cmdmac.aop.annotation.Log;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.cmdmac.aop.annotation.DebugLog;
 import org.cmdmac.aop.annotation.Log;
 import org.cmdmac.aop.annotation.Trace;
 import org.cmdmac.aop.utils.AOPConfig;
 //import org.cmdmac.aop.utils.AOPConfig;
 
+@DebugLog
 public class MainActivity extends AppCompatActivity {
 
     @Override

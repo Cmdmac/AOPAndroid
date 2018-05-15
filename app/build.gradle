@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.cmdmac.aop'
 
 android {
     compileSdkVersion 27
@@ -9,6 +10,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+
     }
     buildTypes {
         release {
@@ -20,69 +23,35 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-//    implementation project(':aop')
+    implementation project(':aop')
+    implementation project(':annotation')
 
-    implementation 'org.aspectj:aspectjrt:1.8.9'
+//    implementation "org.cmdmac.aop:aopplugin:1.0.0"
+
+    implementation 'org.aspectj:aspectjrt:1.8.5'
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
 System.out.println("编译到这里了");
 
+//task toJar (type: Jar) {
+//    from sourceSets.all
+//}
 
-import org.aspectj.bridge.IMessage
-import org.aspectj.bridge.MessageHandler
-import org.aspectj.tools.ajc.Main
-final def log = project.logger
-final def variants = project.android.applicationVariants
+//jar {
+//    manifest { attributes "Main-Class": "com.baeldung.fatjar.Application" }
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//}
 
-variants.all { variant ->
-    if (!variant.buildType.isDebuggable()) {
-        log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
-        return;
-    }
+//task makeJar(type: Copy) {
+//    delete 'build/libs/mysdk.jar'
+//    from('build/intermediates/bundles/release/')
+//    into('build/libs/')
+//    include('classes.jar')
+//    rename ('classes.jar', 'mysdk.jar')
+//}
+//
+//makeJar.dependsOn(build)
 
-    JavaCompile javaCompile = variant.javaCompile
-    javaCompile.doLast {
-        String[] args = ["-showWeaveInfo",
-                         "-1.8",
-                         "-inpath", javaCompile.destinationDir.toString(),
-                         "-aspectpath", javaCompile.classpath.asPath,
-                         "-d", javaCompile.destinationDir.toString(),
-                         "-classpath", javaCompile.classpath.asPath,
-                         "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
-        log.debug "ajc args: " + Arrays.toString(args)
-
-        System.out.println("编译到这里了1" + Arrays.toString(args));
-        MessageHandler handler = new MessageHandler(true);
-        new Main().run(args, handler);
-        for (IMessage message : handler.getMessages(null, true)) {
-            switch (message.getKind()) {
-                case IMessage.ABORT:
-                case IMessage.ERROR:
-                case IMessage.FAIL:
-                    System.out.println("错误");
-
-                    log.error message.message, message.thrown
-                    break;
-                case IMessage.WARNING:
-                    System.out.println("错误");
-                    log.warn message.message, message.thrown
-                    break;
-                    System.out.println("WARNING");
-                case IMessage.INFO:
-                    System.out.println("INFO");
-                    log.info message.message, message.thrown
-                    break;
-                case IMessage.DEBUG:
-                    System.out.println("DEBUG");
-                    log.debug message.message, message.thrown
-                    break;
-            }
-        }
-    }
-}

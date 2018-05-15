@@ -6,15 +6,15 @@ buildscript {
 //        google()
         jcenter()
         google()
+        mavenLocal()
+        maven {
+            url "/home/fengzhiping/work/android/AOPTest/repo"
+        }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.2'
-
-        classpath 'org.aspectj:aspectjtools:1.8.13'
-        classpath 'org.aspectj:aspectjweaver:1.8.13'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'org.cmdmac.aop:aopplugin:1.0.0'
     }
 }
 
@@ -22,6 +22,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+//        mavenCentral()
     }
 }
 
@@ -29,3 +30,14 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+task jarLib(type: Jar, dependsOn: ['build']) {
+    archiveName = 'annotation.jar'
+    from('annotation/build/intermediates/classes/release')
+//    destinationDir = file('build/libs')
+//    into('build/libs')
+    exclude('org/cmdmac/aop/annotaion/BuildConfig.class')
+    exclude('org/cmdmac/aop/annotaion/BuildConfig\$*.class')
+    exclude('**/R.class')
+    exclude('**/R\$*.class')
+    include('org/cmdmac/aop/annotation/')
+}

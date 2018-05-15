@@ -14,13 +14,23 @@ import org.cmdmac.aop.annotation.Log;
 @Aspect
 public class LogAspect {
 
-    @Pointcut("execution(@org.cmdmac.aop.annotation.Log * *(..))")
-    public void pointcut() {
+    @Pointcut("within(@org.cmdmac.aop.annotation.Log *)")
+    public void withinAnnotatedClass() {}
 
-    }
+    @Pointcut("execution(!synthetic * *(..)) && withinAnnotatedClass()")
+    public void methodInsideAnnotatedType() {}
 
-    @Around("pointcut() && @annotation(log)")
-    public Object around(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
+    @Pointcut("execution(!synthetic *.new(..)) && withinAnnotatedClass()")
+    public void constructorInsideAnnotatedType() {}
+
+    @Pointcut("execution(@org.cmdmac.aop.annotation.Log * *(..)) || methodInsideAnnotatedType()")
+    public void method() {}
+
+    @Pointcut("execution(@org.cmdmac.aop.annotation.Log *.new(..)) || constructorInsideAnnotatedType()")
+    public void constructor() {}
+
+    @Around("(method() || constructor()) && @annotation(log)")
+    public Object logAndExecute(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
         StringBuilder sb = new StringBuilder();
         String msg = log.msg();
         if (TextUtils.isEmpty(msg)) {

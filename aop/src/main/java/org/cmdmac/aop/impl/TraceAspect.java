@@ -10,14 +10,22 @@ import org.cmdmac.aop.annotation.Trace;
 
 @Aspect
 public class TraceAspect {
-//    @Pointcut("execution(@org.cmdmac.aop.annotation.Trace * *(..))")
-    @Pointcut("@annotation(org.cmdmac.aop.annotation.Trace)")
-    public void pointcut() {
+    @Pointcut("within(@org.cmdmac.aop.annotation.Log *)")
+    public void withinAnnotatedClass() {}
 
-    }
+    @Pointcut("execution(!synthetic * *(..)) && withinAnnotatedClass()")
+    public void methodInsideAnnotatedType() {}
 
-//    @Around("pointcut() && @annotation(trace)")
-    @Around("@annotation(org.cmdmac.aop.annotation.Trace)")
+    @Pointcut("execution(!synthetic *.new(..)) && withinAnnotatedClass()")
+    public void constructorInsideAnnotatedType() {}
+
+    @Pointcut("execution(@org.cmdmac.aop.annotation.Trace * *(..)) || methodInsideAnnotatedType()")
+    public void method() {}
+
+    @Pointcut("execution(@org.cmdmac.aop.annotation.Trace *.new(..)) || constructorInsideAnnotatedType()")
+    public void constructor() {}
+
+    @Around("(method() || constructor()) && @annotation(trace)")
     public Object around(ProceedingJoinPoint joinPoint, Trace trace) throws Throwable {
 //        System.out.println("@Around");
 

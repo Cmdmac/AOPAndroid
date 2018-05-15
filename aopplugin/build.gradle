@@ -1,0 +1,39 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+//apply plugin: 'nexus'
+
+
+//targetCompatibility = JavaVersion.VERSION_1_7
+//sourceCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:3.1.2'
+    implementation 'org.aspectj:aspectjtools:1.8.5'
+    implementation 'org.aspectj:aspectjrt:1.8.5'
+}
+
+//repositories {
+//    mavenCentral()
+//}
+//
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: uri('../repo'))
+//        }
+//    }
+//}
+
+
+group='org.cmdmac.aop'
+version='1.0.0'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../repo'))
+        }
+    }
+}
