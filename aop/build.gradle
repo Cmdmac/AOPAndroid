@@ -36,15 +36,85 @@ dependencies {
     implementation 'org.aspectj:aspectjrt:1.8.5'
     implementation 'com.android.support:appcompat-v7:27.1.1'
 }
+//android.libraryVariants.all { variant -> variant.javaCompiler.doLast {
+//    jarAopLib
+//}}
 
-task jarAopLib(type: Jar, dependsOn: ['compileReleaseSources']) {
-    archiveName = 'aop.jar'
-    from('build/intermediates/classes/release')
+afterEvaluate {
+//    tasks.matching {
+//        // 以process开头以ReleaseJavaRes或DebugJavaRes结尾的task
+//        it.name.startsWith('jarAopLib') /*&& (it.name.endsWith('ReleaseJavaRes') || it.name.endsWith
+//                ('DebugJavaRes'))*/
+//    }.each { task ->
+//        task.dependsOn(build)   // 任务依赖：执行task之前需要执行dependsOn指定的任务
+//    }
+//    compileDebugJavaWithJavac.dependsOn(jarAopLib)
+    android.libraryVariants.each { variant ->
+        logger.log(LogLevel.ERROR, variant.name)
+//        def archiveName = 'aa.jar'
+        logger.log(LogLevel.ERROR, "aop-${variant.name}")
+        def t = tasks.create(name: "JarLibTask-${variant.name}", type: Jar) {
+            archiveName  "aop-${variant.name}.jar"
+            from('build/intermediates/classes/release')
+            destinationDir = file('build/libs')
+            exclude('org/cmdmac/aop/BuildConfig.class')
+            exclude('org/cmdmac/aop/BuildConfig\$*.class')
+            exclude('**/R.class')
+            exclude('**/R\$*.class')
+            include('org/cmdmac/aop/')
+        }
+        t.doLast {
+            System.out.println('打包完啦');
+        }
+        def d = task("ttt${variant.name}", type: Jar) {
+//            logger.log(LogLevel.ERROR, 'ttt')
+        }
+        d.doLast {
+            logger.log(LogLevel.ERROR, d.name)
+        }
+//        logger.log(LogLevel.ERROR, assemble.getTaskDependencies().toString())
+//        logger.log(LogLevel.ERROR, assemble.getTaskDependencies().getDependencies().toString())
+        t.dependsOn assemble.getTaskDependencies().getDependencies()
+        assemble.dependsOn t
+    }
+}
+
+//task jarAopLib(type: Jar) {
+////    System.out.println('打包了aaa')
+//    archiveName = 'aop.jar'
+//    from('build/intermediates/classes/release')
 //    destinationDir = file('build/libs')
-//    into('build/libs')
-    exclude('org/cmdmac/aop/BuildConfig.class')
-    exclude('org/cmdmac/aop/BuildConfig\$*.class')
-    exclude('**/R.class')
-    exclude('**/R\$*.class')
-    include('org/cmdmac/aop/')
+////    into('build/libs')
+//    exclude('org/cmdmac/aop/BuildConfig.class')
+//    exclude('org/cmdmac/aop/BuildConfig\$*.class')
+//    exclude('**/R.class')
+//    exclude('**/R\$*.class')
+//    include('org/cmdmac/aop/')
+//}
+
+hugo {
+    enabled true
+}
+hugo.message 'hello world'
+lists {
+    hello {
+        name 'abc'
+        msg 'm111'
+        options {
+//            xxx 'jjj'
+            name = 'abc222'
+        }
+    }
+
+    hello1 {
+        name = 'def'
+        msg = 'm222'
+    }
+}
+
+Options {
+    xxx 'yyy'
+    options {
+        xxx = 'lll'
+    }
 }

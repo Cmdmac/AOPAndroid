@@ -7,6 +7,7 @@ import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.compile.JavaCompile
 
 class HugoPlugin implements Plugin<Project> {
@@ -37,6 +38,15 @@ class HugoPlugin implements Plugin<Project> {
 
     project.extensions.create('hugo', HugoExtension)
 
+    def lists = project.container(ListExtention)
+//    lists.all {
+//      msg = 'xxx'
+//    }
+    // Add the container as an extension object
+    project.extensions.lists = lists
+
+    project.extensions.create('Options', OptionsExtentions, project.objects)
+
     variants.all { variant ->
       if (!variant.buildType.isDebuggable()) {
         log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
@@ -45,6 +55,17 @@ class HugoPlugin implements Plugin<Project> {
         log.debug("Hugo is not disabled.")
         return;
       }
+
+      log.log(LogLevel.ERROR, project.hugo.message)
+      System.out.println(project.hugo.message)
+
+      project.lists.each {
+        it -> log.log(LogLevel.ERROR, it.name)
+      }
+
+      log.log(LogLevel.ERROR, project.Options.xxx)
+      log.log(LogLevel.ERROR, project.Options.options.xxx)
+
 
       JavaCompile javaCompile = variant.javaCompile
       javaCompile.doLast {
